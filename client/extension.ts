@@ -11,6 +11,8 @@ import * as im from 'immutable';
 
 import * as lexical from '../compiler/lexical-analysis/lexical';
 
+import * as vscode from 'vscode';
+
 
 // activate registers the Jsonnet language server with vscode, and
 // configures it based on the contents of the workspace JSON file.
@@ -81,9 +83,9 @@ namespace register {
 
     // Register Jsonnet preview commands.
     context.subscriptions.push(vs.commands.registerCommand(
-      'jsonnet.previewToSide', () => display.previewJsonnet(true)));
+      'jsonnet.previewToSide', () => display.previewJsonnet(docProvider, true)));
     context.subscriptions.push(vs.commands.registerCommand(
-      'jsonnet.preview', () => display.previewJsonnet(false)));
+      'jsonnet.preview', () => display.previewJsonnet(docProvider, false)));
 
     // Call `preview` any time we save or open a document.
     context.subscriptions.push(vs.workspace.onDidSaveTextDocument(preview));
@@ -193,7 +195,7 @@ namespace alert {
   }
 
   export const couldNotRenderJsonnet = (reason) => {
-    alert(`Error: Could not render Jsonnet; ${reason}`);
+    alert(`Error: Could not render Jsonnet: ${reason}`);
   }
 
   export const jsonnetCommandNotOnPath = () => {
@@ -513,7 +515,7 @@ namespace jsonnet {
 }
 
 namespace display {
-  export const previewJsonnet = (sideBySide: boolean) => {
+  export const previewJsonnet = (docProvider: jsonnet.DocumentProvider, sideBySide: boolean) => {
     const editor = vs.window.activeTextEditor;
     if (editor == null) {
       alert.noActiveWindow();
@@ -525,17 +527,28 @@ namespace display {
       alert.documentNotJsonnet(languageId);
       return;
     }
+    
+    const title = `Jsonnet preview '${path.basename(
+      editor.document.fileName
+    )}'`;
+
+    const panel = vscode.window.createWebviewPanel(
+      "jsonnetPreview",
+      title,
+      getViewColumn(sideBySide) || vs.ViewColumn.One,
+      {}
+    );
+
+    function updateWebview(previewUri: vs.Uri) {
+      docProvider.provideTextDocumentContent(previewUri).then((html) => {
+        panel.webview.html = html;
+      });
+    }
+
+    docProvider.onDidChange(updateWebview);
 
     const previewUri = jsonnet.canonicalPreviewUri(editor.document.uri);
-
-    return vs.commands.executeCommand(
-      'vscode.previewHtml',
-      previewUri,
-      getViewColumn(sideBySide),
-      `Jsonnet preview '${path.basename(editor.document.fileName)}'`
-    ).then((success) => { }, (reason) => {
-      alert.couldNotRenderJsonnet(reason);
-    });
+    updateWebview(previewUri);
   }
 
   export const getViewColumn = (
