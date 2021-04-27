@@ -4,7 +4,7 @@
   "description": "Language support for Jsonnet",
   "homepage": "https://github.com/Sebbia/vscode-jsonnet-ng/blob/master/README.md",
   "license": "SEE LICENSE IN 'LICENSE' file",
-  "main": "./out/main.js",
+  "main": "./out/client.js",
   "publisher": "Sebbia",
   "version": "1.0.0",
   "icon": "images/jsonnet-logo.png",
@@ -19,14 +19,18 @@
     "jsonnet"
   ],
   "scripts": {
-    "esbuild-base": "esbuild ./client/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
-    "esbuild": "npm run -S esbuild-base -- --sourcemap",
-    "esbuild-release": "npm run -S esbuild-base -- --minify",
-    "esbuild-watch": "npm run -S esbuild-base -- --sourcemap --watch",
-    "compile": "tsc -p ./",
+    "client:esbuild-base": "mkdir -p ./out && cp ./node_modules/vscode-languageclient/lib/utils/electronForkStart.js ./out/ && esbuild ./client/extension.ts --bundle --outfile=out/client.js --external:vscode --format=cjs --platform=node",
+    "client:esbuild": "npm run -S client:esbuild-base -- --sourcemap",
+    "client:esbuild-release": "npm run -S client:esbuild-base -- --minify",
+    "client:esbuild-watch": "npm run -S client:esbuild-base -- --sourcemap --watch",
+    "server:esbuild-base": "esbuild ./server/server.ts --bundle --outfile=out/server.js --external:vscode --format=cjs --platform=node",
+    "server:esbuild": "npm run -S server:esbuild-base -- --sourcemap",
+    "server:esbuild-release": "npm run -S server:esbuild-base -- --minify",
+    "server:esbuild-watch": "npm run -S server:esbuild-base -- --sourcemap --watch",
+    "compile": "npm run client:esbuild",
     "watch": "tsc -watch -p ./",
     "compile-site": "browserify ./out/site/main.js > ksonnet.js",
-    "vscode:prepublish": "npm run esbuild-release"
+    "vscode:prepublish": "npm run client:esbuild-release && npm run server:esbuild-release"
   },
   "activationEvents": [
     "onLanguage:jsonnet",
@@ -111,8 +115,8 @@
     "immutable": "^3.8.1",
     "js-yaml": "^3.0.0",
     "tmp": "0.0.33",
-    "vscode-languageclient": "^3.1.0",
-    "vscode-languageserver": "^3.1.0"
+    "vscode-languageclient": "^3.5.1",
+    "vscode-languageserver": "^3.5.1"
   },
   "devDependencies": {
     "@types/chai": "^3.5.0",

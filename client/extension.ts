@@ -29,7 +29,7 @@ namespace register {
   export const jsonnetClient = (context: vs.ExtensionContext): void => {
     // The server is implemented in node
     let languageClient = jsonnet.languageClient(
-      context.asAbsolutePath(path.join('out', 'server', 'server.js')));
+      context.asAbsolutePath(path.join('out', 'server.js')));
 
 
     // Push the disposable to the context's subscriptions so that the

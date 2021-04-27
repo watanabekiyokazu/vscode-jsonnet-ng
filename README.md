@@ -1,5 +1,9 @@
 # Jsonnet Support for Visual Studio Code
 
+Jsonnet NG is a fork of original extenstion from [heptio](https://github.com/heptio/vscode-jsonnet) 
+with some fixes and improvements. This fork created because the original 
+project was abandoned and archived.
+
 A simple bare-bones extension providing simple syntax highlighting
 for [Jsonnet][jsonnet] files (specifically, files with the `.jsonnet`
 and `.libsonnet` suffixes), as well as a Markdown-style preview pane
