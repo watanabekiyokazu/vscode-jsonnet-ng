@@ -30,13 +30,6 @@
     "onCommand:jsonnet.preview"
   ],
   "contributes": {
-    "iconThemes": [
-      {
-        "id": "jsonnet",
-        "label": "Jsonnet",
-        "path": "./icon-theme.json"
-      }
-    ],
     "commands": [
       {
         "command": "jsonnet.previewToSide",
