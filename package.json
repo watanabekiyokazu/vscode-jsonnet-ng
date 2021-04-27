@@ -12,6 +12,12 @@
     "type": "git",
     "url": "https://github.com/Sebbia/vscode-jsonnet-ng.git"
   },
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "jsonnet"
+  ],
   "scripts": {
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
@@ -23,10 +29,14 @@
     "onCommand:jsonnet.previewToSide",
     "onCommand:jsonnet.preview"
   ],
-  "categories": [
-    "Programming Languages"
-  ],
   "contributes": {
+    "iconThemes": [
+      {
+        "id": "jsonnet",
+        "label": "Jsonnet",
+        "path": "./icon-theme.json"
+      }
+    ],
     "commands": [
       {
         "command": "jsonnet.previewToSide",
