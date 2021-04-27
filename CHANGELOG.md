@@ -6,7 +6,6 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [1.0.0] 2021-04-27
 ## Added
 - VSCode extension icon
-- Icon for jsonnet file extensions
 
 ### Changed
 - Change preview from deprecated and removed `vscode.previewHtml` command to the new Webview based panel
