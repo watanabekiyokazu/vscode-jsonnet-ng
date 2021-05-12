@@ -135,9 +135,18 @@ namespace workspace {
       (<string[]>libPaths).unshift(jsonnetExecutable);
     }
 
+    let workspacepath = "";
+    if(vscode.workspace.workspaceFolders !== undefined) {
+      workspacepath = vscode.workspace.workspaceFolders[0].uri.fsPath ; 
+    }
+
     return libPaths
-      .map(path => `-J ${path}`)
-      .join(" ");
+      .map(function(path){
+        if (path[0] == "@"){
+          path = workspacepath + path.slice(1); 
+        }
+        return `-J ${path}`
+      }).join(" ");
   }
 
   export const outputFormat = (): "json" | "yaml" => {
